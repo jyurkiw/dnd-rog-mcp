@@ -1,4 +1,4 @@
-# dnd-mcp
+# dnd-rog-mcp
 
 A purpose-specific MCP (Model Context Protocol) server for developing D&D adventures and supplements, backed by a Neo4j graph database.
 
