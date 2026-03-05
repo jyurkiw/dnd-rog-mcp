@@ -5,6 +5,8 @@ WORKDIR /app
 # Install the package with test extras
 COPY pyproject.toml .
 COPY src/ src/
+# Upgrade pip and setuptools first to ensure build backend compatibility
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 RUN pip install --no-cache-dir -e ".[test]"
 
 # Copy test suite

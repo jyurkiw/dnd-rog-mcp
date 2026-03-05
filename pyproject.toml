@@ -1,6 +1,6 @@
 [build-system]
 requires = ["setuptools>=68", "wheel"]
-build-backend = "setuptools.backends.legacy:build"
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "dnd-rog-mcp"
@@ -33,7 +33,7 @@ testpaths = ["test"]
 timeout = 30
 log_cli = true
 log_cli_level = "WARNING"
-addopts = "--order-group-by=marker"
+addopts = ""
 markers = [
     "unit: pure unit tests, no DB required",
     "integration: requires a live Neo4j instance",

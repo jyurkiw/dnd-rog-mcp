@@ -87,15 +87,26 @@ def neo4j_seeded():
 
 # ── Execution phase ordering ──────────────────────────────────────────────────
 
-PHASE_ORDER = ["unit", "integration", "requires_fixture", "isolated", "slow"]
+# Maps marker name to phase number. Lower = runs first.
+PHASE_ORDER = {
+    "unit": 0,
+    "integration": 1,
+    "requires_fixture": 2,
+    "isolated": 3,
+    "slow": 4,
+}
 
 
 def pytest_collection_modifyitems(items, config):
-    """Sort collected tests by execution phase marker."""
+    """
+    Assign a phase-based sort key to each test and stable-sort by it.
+    Tests with no phase marker sort last.
+    pytest-order respects the order of items in the collection list.
+    """
     def phase_key(item):
-        for i, marker_name in enumerate(PHASE_ORDER):
+        for marker_name, phase in PHASE_ORDER.items():
             if item.get_closest_marker(marker_name):
-                return i
+                return phase
         return len(PHASE_ORDER)  # unmarked tests run last
 
     items.sort(key=phase_key)

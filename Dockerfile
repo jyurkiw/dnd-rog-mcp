@@ -5,6 +5,7 @@ WORKDIR /app
 COPY pyproject.toml .
 COPY src/ src/
 
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 RUN pip install --no-cache-dir -e .
 
 ENV NEO4J_URI=bolt://neo4j:7687
