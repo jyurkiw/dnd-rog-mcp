@@ -28,7 +28,6 @@ dnd-rog-mcp = "dnd_mcp.server:main"
 where = ["src"]
 
 [tool.pytest.ini_options]
-verbosity = 3
 testpaths = ["test"]
 timeout = 30
 log_cli = true
