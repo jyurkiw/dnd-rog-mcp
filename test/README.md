@@ -4,7 +4,7 @@ This directory contains test data and fixtures for `dnd-rog-mcp`.
 
 ## Contents
 
-### `test_data_adventure.md`
+### [test_data_adventure.md](test_data_adventure.md)
 
 The canonical test fixture for the project: *The Troubles of Shadowdale*, a complete Tier 1 D&D adventure decomposed into every node, relationship, encounter, boxed text sequence, rumor, fact, and timeline entry required to populate the database.
 
