@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dnd-rog-mcp"
+version = "0.1.0"
+description = "A Neo4j-backed MCP server for D&D adventure writing"
+requires-python = ">=3.11"
+dependencies = [
+    "neo4j>=5.0",
+    "mcp>=1.0",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=8.0",
+    "assertpy>=1.1",
+    "testcontainers[neo4j]>=4.0",
+    "pytest-timeout>=2.3",
+    "pytest-order>=1.2",
+]
+
+[project.scripts]
+dnd-rog-mcp = "dnd_mcp.server:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["test"]
+timeout = 30
+log_cli = true
+log_cli_level = "WARNING"
+addopts = ""
+markers = [
+    "unit: pure unit tests, no DB required",
+    "integration: requires a live Neo4j instance",
+    "requires_fixture: depends on the Shadowdale fixture having been imported (Phase 3+)",
+    "isolated: receives its own fresh DB, does not share state",
+    "slow: long-running tests, skippable in fast dev cycles",
+]

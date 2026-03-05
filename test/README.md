@@ -4,7 +4,7 @@ This directory contains test data and fixtures for `dnd-rog-mcp`.
 
 ## Contents
 
-### [test_data_adventure.md](test_data_adventure.md)
+### `test_data_adventure.md`
 
 The canonical test fixture for the project: *The Troubles of Shadowdale*, a complete Tier 1 D&D adventure decomposed into every node, relationship, encounter, boxed text sequence, rumor, fact, and timeline entry required to populate the database.
 
@@ -15,7 +15,7 @@ The document has two parts:
 
 This adventure is specifically designed to exercise every requirement category defined in `DESIGN.md`. The requirement coverage table at the end of the document maps each category to the specific nodes and relationships that test it.
 
-### [test_architecture.md](test_architecture.md)
+### `test_architecture.md`
 
 Full specification of the testing architecture: dependency rationale, pytest configuration, custom report design, test naming conventions, marker definitions, six-phase execution order strategy, Neo4j fixture scopes, and Docker environment setup. Read this before writing new tests.
 

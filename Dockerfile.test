@@ -1,0 +1,23 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install the package with test extras
+COPY pyproject.toml .
+COPY src/ src/
+# Upgrade pip and setuptools first to ensure build backend compatibility
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel
+RUN pip install --no-cache-dir -e ".[test]"
+
+# Copy test suite
+COPY test/ test/
+
+ENV NEO4J_URI=bolt://neo4j-test:7687
+ENV NEO4J_USER=neo4j
+ENV NEO4J_PASSWORD=test-password
+ENV NEO4J_DATABASE=neo4j
+ENV ALLOW_TRUE_DELETE=true
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+CMD ["pytest", "--verbosity=3"]
