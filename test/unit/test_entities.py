@@ -130,6 +130,7 @@ def test_MP_03_create_global_npc_null_uid_returns_error():
     result = create_global_npc(driver, uid=None, canonical_name="Elminster Aumar", summary="Archmage.")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -140,6 +141,7 @@ def test_MP_03_create_global_npc_null_canonical_name_returns_error():
     result = create_global_npc(driver, uid="global-npc-test", canonical_name=None, summary="A mage.")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -150,6 +152,7 @@ def test_MP_03_create_global_npc_null_summary_returns_error():
     result = create_global_npc(driver, uid="global-npc-test", canonical_name="Test NPC", summary=None)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -162,6 +165,7 @@ def test_MP_03_create_global_npc_empty_uid_returns_error():
     result = create_global_npc(driver, uid="", canonical_name="Test NPC", summary="A test NPC.")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -172,6 +176,7 @@ def test_MP_03_create_global_npc_zero_uid_returns_error():
     result = create_global_npc(driver, uid=0, canonical_name="Test NPC", summary="A test NPC.")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -182,6 +187,7 @@ def test_MP_03_create_global_npc_empty_canonical_name_returns_error():
     result = create_global_npc(driver, uid="global-npc-test", canonical_name="", summary="A test NPC.")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -194,6 +200,7 @@ def test_MP_03_create_global_npc_integer_uid_returns_error():
     result = create_global_npc(driver, uid=99, canonical_name="Test NPC", summary="A test NPC.")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -204,6 +211,7 @@ def test_MP_03_create_global_npc_float_uid_returns_error():
     result = create_global_npc(driver, uid=1.5, canonical_name="Test NPC", summary="A test NPC.")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -214,6 +222,7 @@ def test_MP_03_create_global_npc_integer_canonical_name_returns_error():
     result = create_global_npc(driver, uid="global-npc-test", canonical_name=42, summary="A test NPC.")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -224,6 +233,7 @@ def test_MP_03_create_global_npc_float_canonical_name_returns_error():
     result = create_global_npc(driver, uid="global-npc-test", canonical_name=3.14, summary="A test NPC.")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -240,6 +250,7 @@ def test_MP_03_create_global_npc_integer_aliases_returns_error():
     )
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -256,6 +267,7 @@ def test_MP_03_create_global_npc_float_aliases_returns_error():
     )
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -264,42 +276,42 @@ def test_MP_03_create_global_npc_float_aliases_returns_error():
 @pytest.mark.unit
 def test_MP_03_create_global_npc_missing_uid_returns_error():
     """
-    create_global_npc called without uid must return a structured error or raise TypeError.
+    create_global_npc called without uid must return a structured error.
+    Per MP-02, functions must validate inputs and return structured errors,
+    not raise TypeError.
     """
     driver = _mock_driver()
-    try:
-        result = create_global_npc(driver, canonical_name="Test NPC", summary="A test NPC.")
-        assert_that(result).contains_key("error")
-    except TypeError:
-        pass
+    result = create_global_npc(driver, canonical_name="Test NPC", summary="A test NPC.")
+    assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
 @pytest.mark.unit
 def test_MP_03_create_global_npc_missing_canonical_name_returns_error():
     """
-    create_global_npc called without canonical_name must return a structured error or raise TypeError.
+    create_global_npc called without canonical_name must return a structured error.
+    Per MP-02, functions must validate inputs and return structured errors,
+    not raise TypeError.
     """
     driver = _mock_driver()
-    try:
-        result = create_global_npc(driver, uid="global-npc-test", summary="A test NPC.")
-        assert_that(result).contains_key("error")
-    except TypeError:
-        pass
+    result = create_global_npc(driver, uid="global-npc-test", summary="A test NPC.")
+    assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
 @pytest.mark.unit
 def test_MP_03_create_global_npc_missing_summary_returns_error():
     """
-    create_global_npc called without summary must return a structured error or raise TypeError.
+    create_global_npc called without summary must return a structured error.
+    Per MP-02, functions must validate inputs and return structured errors,
+    not raise TypeError.
     """
     driver = _mock_driver()
-    try:
-        result = create_global_npc(driver, uid="global-npc-test", canonical_name="Test NPC")
-        assert_that(result).contains_key("error")
-    except TypeError:
-        pass
+    result = create_global_npc(driver, uid="global-npc-test", canonical_name="Test NPC")
+    assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -322,8 +334,8 @@ def test_MP_03_create_global_npc_extra_args_does_not_raise():
             another_extra=0,
         )
         assert_that(result).is_instance_of(dict)
-    except TypeError:
-        pass
+    except TypeError as exc:
+        pytest.fail(f"Function must use **kwargs; TypeError raised for extra args: {exc}")
     except Exception as exc:
         pytest.fail(f"Unexpected exception for extra args: {type(exc).__name__}: {exc}")
 
@@ -352,6 +364,7 @@ def test_MP_03_create_global_location_null_uid_returns_error():
     result = create_global_location(driver, uid=None, canonical_name="Shadowdale", summary="A dale.")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -362,6 +375,7 @@ def test_MP_03_create_global_location_null_canonical_name_returns_error():
     result = create_global_location(driver, uid="global-loc-test", canonical_name=None, summary="A dale.")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -372,6 +386,7 @@ def test_MP_03_create_global_location_empty_uid_returns_error():
     result = create_global_location(driver, uid="", canonical_name="Shadowdale", summary="A dale.")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -382,6 +397,7 @@ def test_MP_03_create_global_location_zero_uid_returns_error():
     result = create_global_location(driver, uid=0, canonical_name="Shadowdale", summary="A dale.")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -392,6 +408,7 @@ def test_MP_03_create_global_location_integer_uid_returns_error():
     result = create_global_location(driver, uid=5, canonical_name="Shadowdale", summary="A dale.")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -402,18 +419,21 @@ def test_MP_03_create_global_location_float_canonical_name_returns_error():
     result = create_global_location(driver, uid="global-loc-test", canonical_name=1.0, summary="A dale.")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
 @pytest.mark.unit
 def test_MP_03_create_global_location_missing_uid_returns_error():
-    """create_global_location without uid must return a structured error or raise TypeError."""
+    """
+    create_global_location without uid must return a structured error.
+    Per MP-02, functions must validate inputs and return structured errors,
+    not raise TypeError.
+    """
     driver = _mock_driver()
-    try:
-        result = create_global_location(driver, canonical_name="Shadowdale", summary="A dale.")
-        assert_that(result).contains_key("error")
-    except TypeError:
-        pass
+    result = create_global_location(driver, canonical_name="Shadowdale", summary="A dale.")
+    assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -430,8 +450,8 @@ def test_MP_03_create_global_location_extra_args_does_not_raise():
             mystery_field="unexpected",
         )
         assert_that(result).is_instance_of(dict)
-    except TypeError:
-        pass
+    except TypeError as exc:
+        pytest.fail(f"Function must use **kwargs; TypeError raised for extra args: {exc}")
     except Exception as exc:
         pytest.fail(f"Unexpected exception for extra args: {type(exc).__name__}: {exc}")
 
@@ -458,6 +478,7 @@ def test_MP_03_create_global_item_null_uid_returns_error():
     result = create_global_item(driver, uid=None, canonical_name="Pipe of Elminster", summary="A pipe.")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -468,6 +489,7 @@ def test_MP_03_create_global_item_null_canonical_name_returns_error():
     result = create_global_item(driver, uid="global-item-test", canonical_name=None, summary="A pipe.")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -478,6 +500,7 @@ def test_MP_03_create_global_item_empty_uid_returns_error():
     result = create_global_item(driver, uid="", canonical_name="Test Item", summary="A test item.")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -488,6 +511,7 @@ def test_MP_03_create_global_item_zero_uid_returns_error():
     result = create_global_item(driver, uid=0, canonical_name="Test Item", summary="A test item.")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -498,6 +522,7 @@ def test_MP_03_create_global_item_integer_uid_returns_error():
     result = create_global_item(driver, uid=7, canonical_name="Test Item", summary="A test item.")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -508,6 +533,7 @@ def test_MP_03_create_global_item_float_uid_returns_error():
     result = create_global_item(driver, uid=2.5, canonical_name="Test Item", summary="A test item.")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -518,30 +544,35 @@ def test_MP_03_create_global_item_integer_canonical_name_returns_error():
     result = create_global_item(driver, uid="global-item-test", canonical_name=0, summary="A test item.")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
 @pytest.mark.unit
 def test_MP_03_create_global_item_missing_uid_returns_error():
-    """create_global_item without uid must return a structured error or raise TypeError."""
+    """
+    create_global_item without uid must return a structured error.
+    Per MP-02, functions must validate inputs and return structured errors,
+    not raise TypeError.
+    """
     driver = _mock_driver()
-    try:
-        result = create_global_item(driver, canonical_name="Test Item", summary="A test item.")
-        assert_that(result).contains_key("error")
-    except TypeError:
-        pass
+    result = create_global_item(driver, canonical_name="Test Item", summary="A test item.")
+    assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
 @pytest.mark.unit
 def test_MP_03_create_global_item_missing_canonical_name_returns_error():
-    """create_global_item without canonical_name must return a structured error or raise TypeError."""
+    """
+    create_global_item without canonical_name must return a structured error.
+    Per MP-02, functions must validate inputs and return structured errors,
+    not raise TypeError.
+    """
     driver = _mock_driver()
-    try:
-        result = create_global_item(driver, uid="global-item-test", summary="A test item.")
-        assert_that(result).contains_key("error")
-    except TypeError:
-        pass
+    result = create_global_item(driver, uid="global-item-test", summary="A test item.")
+    assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -558,8 +589,8 @@ def test_MP_03_create_global_item_extra_args_does_not_raise():
             totally_unknown=True,
         )
         assert_that(result).is_instance_of(dict)
-    except TypeError:
-        pass
+    except TypeError as exc:
+        pytest.fail(f"Function must use **kwargs; TypeError raised for extra args: {exc}")
     except Exception as exc:
         pytest.fail(f"Unexpected exception for extra args: {type(exc).__name__}: {exc}")
 
@@ -586,6 +617,7 @@ def test_MP_03_create_global_faction_null_uid_returns_error():
     result = create_global_faction(driver, uid=None, canonical_name="The Harpers", summary="A network.")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -596,6 +628,7 @@ def test_MP_03_create_global_faction_null_canonical_name_returns_error():
     result = create_global_faction(driver, uid="global-faction-test", canonical_name=None, summary="A network.")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -606,6 +639,7 @@ def test_MP_03_create_global_faction_empty_uid_returns_error():
     result = create_global_faction(driver, uid="", canonical_name="The Harpers", summary="A network.")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -616,6 +650,7 @@ def test_MP_03_create_global_faction_zero_uid_returns_error():
     result = create_global_faction(driver, uid=0, canonical_name="The Harpers", summary="A network.")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -626,6 +661,7 @@ def test_MP_03_create_global_faction_integer_uid_returns_error():
     result = create_global_faction(driver, uid=3, canonical_name="The Harpers", summary="A network.")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -636,18 +672,21 @@ def test_MP_03_create_global_faction_float_uid_returns_error():
     result = create_global_faction(driver, uid=0.1, canonical_name="The Harpers", summary="A network.")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
 @pytest.mark.unit
 def test_MP_03_create_global_faction_missing_uid_returns_error():
-    """create_global_faction without uid must return a structured error or raise TypeError."""
+    """
+    create_global_faction without uid must return a structured error.
+    Per MP-02, functions must validate inputs and return structured errors,
+    not raise TypeError.
+    """
     driver = _mock_driver()
-    try:
-        result = create_global_faction(driver, canonical_name="The Harpers", summary="A network.")
-        assert_that(result).contains_key("error")
-    except TypeError:
-        pass
+    result = create_global_faction(driver, canonical_name="The Harpers", summary="A network.")
+    assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -664,8 +703,8 @@ def test_MP_03_create_global_faction_extra_args_does_not_raise():
             unexpected_key="oops",
         )
         assert_that(result).is_instance_of(dict)
-    except TypeError:
-        pass
+    except TypeError as exc:
+        pytest.fail(f"Function must use **kwargs; TypeError raised for extra args: {exc}")
     except Exception as exc:
         pytest.fail(f"Unexpected exception for extra args: {type(exc).__name__}: {exc}")
 
@@ -692,6 +731,7 @@ def test_MP_03_upsert_npc_null_uid_returns_error():
     result = upsert_npc(driver, uid=None, name="Jhaele", summary="A farmer.", source_adventure=VALID_ADVENTURE_UID)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -702,6 +742,7 @@ def test_MP_03_upsert_npc_null_name_returns_error():
     result = upsert_npc(driver, uid="npc-test", name=None, summary="A farmer.", source_adventure=VALID_ADVENTURE_UID)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -715,6 +756,7 @@ def test_MP_03_upsert_npc_null_source_adventure_returns_error():
     result = upsert_npc(driver, uid="npc-test", name="Jhaele", summary="A farmer.", source_adventure=None)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -725,6 +767,7 @@ def test_MP_03_upsert_npc_empty_uid_returns_error():
     result = upsert_npc(driver, uid="", name="Jhaele", summary="A farmer.", source_adventure=VALID_ADVENTURE_UID)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -735,6 +778,7 @@ def test_MP_03_upsert_npc_zero_uid_returns_error():
     result = upsert_npc(driver, uid=0, name="Jhaele", summary="A farmer.", source_adventure=VALID_ADVENTURE_UID)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -745,6 +789,7 @@ def test_MP_03_upsert_npc_empty_name_returns_error():
     result = upsert_npc(driver, uid="npc-test", name="", summary="A farmer.", source_adventure=VALID_ADVENTURE_UID)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -755,6 +800,7 @@ def test_MP_03_upsert_npc_integer_uid_returns_error():
     result = upsert_npc(driver, uid=10, name="Jhaele", summary="A farmer.", source_adventure=VALID_ADVENTURE_UID)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -765,6 +811,7 @@ def test_MP_03_upsert_npc_float_uid_returns_error():
     result = upsert_npc(driver, uid=1.1, name="Jhaele", summary="A farmer.", source_adventure=VALID_ADVENTURE_UID)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -775,6 +822,7 @@ def test_MP_03_upsert_npc_integer_name_returns_error():
     result = upsert_npc(driver, uid="npc-test", name=5, summary="A farmer.", source_adventure=VALID_ADVENTURE_UID)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -785,20 +833,21 @@ def test_MP_03_upsert_npc_float_name_returns_error():
     result = upsert_npc(driver, uid="npc-test", name=0.0, summary="A farmer.", source_adventure=VALID_ADVENTURE_UID)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
 @pytest.mark.unit
 def test_MP_03_upsert_npc_missing_source_adventure_returns_error():
     """
-    upsert_npc without source_adventure must return a structured error or raise TypeError.
+    upsert_npc without source_adventure must return a structured error.
+    Per MP-02, functions must validate inputs and return structured errors,
+    not raise TypeError.
     """
     driver = _mock_driver()
-    try:
-        result = upsert_npc(driver, uid="npc-test", name="Jhaele", summary="A farmer.")
-        assert_that(result).contains_key("error")
-    except TypeError:
-        pass
+    result = upsert_npc(driver, uid="npc-test", name="Jhaele", summary="A farmer.")
+    assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -816,8 +865,8 @@ def test_MP_03_upsert_npc_extra_args_does_not_raise():
             totally_unknown_field="surprise",
         )
         assert_that(result).is_instance_of(dict)
-    except TypeError:
-        pass
+    except TypeError as exc:
+        pytest.fail(f"Function must use **kwargs; TypeError raised for extra args: {exc}")
     except Exception as exc:
         pytest.fail(f"Unexpected exception for extra args: {type(exc).__name__}: {exc}")
 
@@ -844,6 +893,7 @@ def test_MP_03_upsert_location_null_uid_returns_error():
     result = upsert_location(driver, uid=None, name="Jhaele's Farm", summary="A farm.", source_adventure=VALID_ADVENTURE_UID)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -854,6 +904,7 @@ def test_MP_03_upsert_location_null_name_returns_error():
     result = upsert_location(driver, uid="loc-test", name=None, summary="A farm.", source_adventure=VALID_ADVENTURE_UID)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -864,6 +915,7 @@ def test_MP_03_upsert_location_null_source_adventure_returns_error():
     result = upsert_location(driver, uid="loc-test", name="Jhaele's Farm", summary="A farm.", source_adventure=None)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -874,6 +926,7 @@ def test_MP_03_upsert_location_empty_uid_returns_error():
     result = upsert_location(driver, uid="", name="Jhaele's Farm", summary="A farm.", source_adventure=VALID_ADVENTURE_UID)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -884,6 +937,7 @@ def test_MP_03_upsert_location_zero_uid_returns_error():
     result = upsert_location(driver, uid=0, name="Jhaele's Farm", summary="A farm.", source_adventure=VALID_ADVENTURE_UID)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -894,6 +948,7 @@ def test_MP_03_upsert_location_integer_uid_returns_error():
     result = upsert_location(driver, uid=100, name="Jhaele's Farm", summary="A farm.", source_adventure=VALID_ADVENTURE_UID)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -904,18 +959,21 @@ def test_MP_03_upsert_location_float_name_returns_error():
     result = upsert_location(driver, uid="loc-test", name=3.14, summary="A farm.", source_adventure=VALID_ADVENTURE_UID)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
 @pytest.mark.unit
 def test_MP_03_upsert_location_missing_source_adventure_returns_error():
-    """upsert_location without source_adventure must return a structured error or raise TypeError."""
+    """
+    upsert_location without source_adventure must return a structured error.
+    Per MP-02, functions must validate inputs and return structured errors,
+    not raise TypeError.
+    """
     driver = _mock_driver()
-    try:
-        result = upsert_location(driver, uid="loc-test", name="Jhaele's Farm", summary="A farm.")
-        assert_that(result).contains_key("error")
-    except TypeError:
-        pass
+    result = upsert_location(driver, uid="loc-test", name="Jhaele's Farm", summary="A farm.")
+    assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -933,8 +991,8 @@ def test_MP_03_upsert_location_extra_args_does_not_raise():
             unknown_kwarg="surprise",
         )
         assert_that(result).is_instance_of(dict)
-    except TypeError:
-        pass
+    except TypeError as exc:
+        pytest.fail(f"Function must use **kwargs; TypeError raised for extra args: {exc}")
     except Exception as exc:
         pytest.fail(f"Unexpected exception for extra args: {type(exc).__name__}: {exc}")
 
@@ -961,6 +1019,7 @@ def test_MP_03_upsert_item_null_uid_returns_error():
     result = upsert_item(driver, uid=None, name="Wooden Chest", summary="A chest.", source_adventure=VALID_ADVENTURE_UID)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -971,6 +1030,7 @@ def test_MP_03_upsert_item_null_name_returns_error():
     result = upsert_item(driver, uid="item-test", name=None, summary="A chest.", source_adventure=VALID_ADVENTURE_UID)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -981,6 +1041,7 @@ def test_MP_03_upsert_item_null_source_adventure_returns_error():
     result = upsert_item(driver, uid="item-test", name="Wooden Chest", summary="A chest.", source_adventure=None)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -991,6 +1052,7 @@ def test_MP_03_upsert_item_empty_uid_returns_error():
     result = upsert_item(driver, uid="", name="Wooden Chest", summary="A chest.", source_adventure=VALID_ADVENTURE_UID)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -1001,6 +1063,7 @@ def test_MP_03_upsert_item_zero_uid_returns_error():
     result = upsert_item(driver, uid=0, name="Wooden Chest", summary="A chest.", source_adventure=VALID_ADVENTURE_UID)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -1011,6 +1074,7 @@ def test_MP_03_upsert_item_integer_uid_returns_error():
     result = upsert_item(driver, uid=8, name="Wooden Chest", summary="A chest.", source_adventure=VALID_ADVENTURE_UID)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -1021,6 +1085,7 @@ def test_MP_03_upsert_item_float_uid_returns_error():
     result = upsert_item(driver, uid=0.5, name="Wooden Chest", summary="A chest.", source_adventure=VALID_ADVENTURE_UID)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -1031,6 +1096,7 @@ def test_MP_03_upsert_item_integer_name_returns_error():
     result = upsert_item(driver, uid="item-test", name=0, summary="A chest.", source_adventure=VALID_ADVENTURE_UID)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -1041,18 +1107,21 @@ def test_MP_03_upsert_item_float_name_returns_error():
     result = upsert_item(driver, uid="item-test", name=2.2, summary="A chest.", source_adventure=VALID_ADVENTURE_UID)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
 @pytest.mark.unit
 def test_MP_03_upsert_item_missing_source_adventure_returns_error():
-    """upsert_item without source_adventure must return a structured error or raise TypeError."""
+    """
+    upsert_item without source_adventure must return a structured error.
+    Per MP-02, functions must validate inputs and return structured errors,
+    not raise TypeError.
+    """
     driver = _mock_driver()
-    try:
-        result = upsert_item(driver, uid="item-test", name="Wooden Chest", summary="A chest.")
-        assert_that(result).contains_key("error")
-    except TypeError:
-        pass
+    result = upsert_item(driver, uid="item-test", name="Wooden Chest", summary="A chest.")
+    assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -1070,8 +1139,8 @@ def test_MP_03_upsert_item_extra_args_does_not_raise():
             completely_made_up=True,
         )
         assert_that(result).is_instance_of(dict)
-    except TypeError:
-        pass
+    except TypeError as exc:
+        pytest.fail(f"Function must use **kwargs; TypeError raised for extra args: {exc}")
     except Exception as exc:
         pytest.fail(f"Unexpected exception for extra args: {type(exc).__name__}: {exc}")
 
@@ -1098,6 +1167,7 @@ def test_MP_03_upsert_faction_null_uid_returns_error():
     result = upsert_faction(driver, uid=None, name="Shadowdale Militia", summary="Defenders.", source_adventure=VALID_ADVENTURE_UID)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -1108,6 +1178,7 @@ def test_MP_03_upsert_faction_null_name_returns_error():
     result = upsert_faction(driver, uid="faction-test", name=None, summary="Defenders.", source_adventure=VALID_ADVENTURE_UID)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -1118,6 +1189,7 @@ def test_MP_03_upsert_faction_null_source_adventure_returns_error():
     result = upsert_faction(driver, uid="faction-test", name="Shadowdale Militia", summary="Defenders.", source_adventure=None)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -1128,6 +1200,7 @@ def test_MP_03_upsert_faction_empty_uid_returns_error():
     result = upsert_faction(driver, uid="", name="Shadowdale Militia", summary="Defenders.", source_adventure=VALID_ADVENTURE_UID)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -1138,6 +1211,7 @@ def test_MP_03_upsert_faction_zero_uid_returns_error():
     result = upsert_faction(driver, uid=0, name="Shadowdale Militia", summary="Defenders.", source_adventure=VALID_ADVENTURE_UID)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -1148,6 +1222,7 @@ def test_MP_03_upsert_faction_integer_uid_returns_error():
     result = upsert_faction(driver, uid=12, name="Shadowdale Militia", summary="Defenders.", source_adventure=VALID_ADVENTURE_UID)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -1158,6 +1233,7 @@ def test_MP_03_upsert_faction_float_uid_returns_error():
     result = upsert_faction(driver, uid=0.0, name="Shadowdale Militia", summary="Defenders.", source_adventure=VALID_ADVENTURE_UID)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -1168,18 +1244,21 @@ def test_MP_03_upsert_faction_integer_name_returns_error():
     result = upsert_faction(driver, uid="faction-test", name=1, summary="Defenders.", source_adventure=VALID_ADVENTURE_UID)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
 @pytest.mark.unit
 def test_MP_03_upsert_faction_missing_source_adventure_returns_error():
-    """upsert_faction without source_adventure must return a structured error or raise TypeError."""
+    """
+    upsert_faction without source_adventure must return a structured error.
+    Per MP-02, functions must validate inputs and return structured errors,
+    not raise TypeError.
+    """
     driver = _mock_driver()
-    try:
-        result = upsert_faction(driver, uid="faction-test", name="Shadowdale Militia", summary="Defenders.")
-        assert_that(result).contains_key("error")
-    except TypeError:
-        pass
+    result = upsert_faction(driver, uid="faction-test", name="Shadowdale Militia", summary="Defenders.")
+    assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -1197,8 +1276,8 @@ def test_MP_03_upsert_faction_extra_args_does_not_raise():
             extra_kwarg="oops",
         )
         assert_that(result).is_instance_of(dict)
-    except TypeError:
-        pass
+    except TypeError as exc:
+        pytest.fail(f"Function must use **kwargs; TypeError raised for extra args: {exc}")
     except Exception as exc:
         pytest.fail(f"Unexpected exception for extra args: {type(exc).__name__}: {exc}")
 
@@ -1231,6 +1310,7 @@ def test_MP_02_get_global_entity_not_found_npc_returns_structured_error():
     result = get_global_entity(driver, uid="nonexistent-global-npc-xyzzy")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
 
 
 @pytest.mark.unit
@@ -1245,6 +1325,7 @@ def test_MP_02_get_global_entity_not_found_location_returns_structured_error():
     result = get_global_entity(driver, uid="nonexistent-global-location-xyzzy")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
 
 
 @pytest.mark.unit
@@ -1259,6 +1340,7 @@ def test_MP_02_get_global_entity_not_found_item_returns_structured_error():
     result = get_global_entity(driver, uid="nonexistent-global-item-xyzzy")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
 
 
 @pytest.mark.unit
@@ -1273,6 +1355,7 @@ def test_MP_02_get_global_entity_not_found_faction_returns_structured_error():
     result = get_global_entity(driver, uid="nonexistent-global-faction-xyzzy")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
 
 
 @pytest.mark.unit
@@ -1287,6 +1370,7 @@ def test_MP_02_get_entity_not_found_npc_returns_structured_error():
     result = get_entity(driver, uid="nonexistent-npc-xyzzy")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
 
 
 @pytest.mark.unit
@@ -1301,6 +1385,7 @@ def test_MP_02_get_entity_not_found_location_returns_structured_error():
     result = get_entity(driver, uid="nonexistent-location-xyzzy")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
 
 
 @pytest.mark.unit
@@ -1315,6 +1400,7 @@ def test_MP_02_get_entity_not_found_item_returns_structured_error():
     result = get_entity(driver, uid="nonexistent-item-xyzzy")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
 
 
 @pytest.mark.unit
@@ -1329,3 +1415,4 @@ def test_MP_02_get_entity_not_found_faction_returns_structured_error():
     result = get_entity(driver, uid="nonexistent-faction-xyzzy")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()

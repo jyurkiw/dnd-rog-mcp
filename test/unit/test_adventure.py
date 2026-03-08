@@ -47,6 +47,7 @@ def test_MP_03_create_adventure_null_uid_returns_error():
     result = create_adventure(driver, uid=None, name="Test Adventure", status="draft")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -57,6 +58,7 @@ def test_MP_03_create_adventure_null_name_returns_error():
     result = create_adventure(driver, uid="test-adventure", name=None, status="draft")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -67,6 +69,7 @@ def test_MP_03_create_adventure_null_status_returns_error():
     result = create_adventure(driver, uid="test-adventure", name="Test Adventure", status=None)
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -82,6 +85,7 @@ def test_MP_03_create_adventure_zero_integer_uid_returns_error():
     result = create_adventure(driver, uid=0, name="Test Adventure", status="draft")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -92,6 +96,7 @@ def test_MP_03_create_adventure_zero_float_uid_returns_error():
     result = create_adventure(driver, uid=0.0, name="Test Adventure", status="draft")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -105,6 +110,7 @@ def test_MP_03_create_adventure_empty_string_uid_returns_error():
     result = create_adventure(driver, uid="", name="Test Adventure", status="draft")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -118,6 +124,7 @@ def test_MP_03_create_adventure_whitespace_uid_returns_error():
     result = create_adventure(driver, uid="   ", name="Test Adventure", status="draft")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -128,6 +135,7 @@ def test_MP_03_create_adventure_empty_string_name_returns_error():
     result = create_adventure(driver, uid="test-adventure", name="", status="draft")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -138,6 +146,7 @@ def test_MP_03_create_adventure_zero_integer_name_returns_error():
     result = create_adventure(driver, uid="test-adventure", name=0, status="draft")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -153,6 +162,7 @@ def test_MP_03_create_adventure_integer_uid_returns_error():
     result = create_adventure(driver, uid=42, name="Test Adventure", status="draft")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -163,6 +173,7 @@ def test_MP_03_create_adventure_float_uid_returns_error():
     result = create_adventure(driver, uid=3.14, name="Test Adventure", status="draft")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -173,6 +184,7 @@ def test_MP_03_create_adventure_float_name_returns_error():
     result = create_adventure(driver, uid="test-adventure", name=3.14, status="draft")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -192,6 +204,7 @@ def test_MP_03_create_adventure_integer_tags_returns_error():
     )
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -208,6 +221,7 @@ def test_MP_03_create_adventure_float_tags_returns_error():
     )
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -226,6 +240,7 @@ def test_MP_03_create_adventure_invalid_status_value_returns_error():
     )
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -241,6 +256,7 @@ def test_MP_03_create_adventure_integer_status_returns_error():
     )
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -249,44 +265,45 @@ def test_MP_03_create_adventure_integer_status_returns_error():
 @pytest.mark.unit
 def test_MP_03_create_adventure_missing_uid_returns_error():
     """
-    create_adventure called without uid must return a structured error or raise
-    TypeError.  Either response is acceptable; the function must never silently
-    create a node with a missing uid.
+    create_adventure called without uid must return a structured error.
+    Per MP-02, functions must validate inputs and return structured errors,
+    not raise TypeError.  Implementations must default uid=None and validate.
     """
     driver = _mock_driver()
-    try:
-        result = create_adventure(driver, name="Test Adventure", status="draft")
-        assert_that(result).contains_key("error")
-    except TypeError:
-        pass  # acceptable — required positional argument omitted
+    result = create_adventure(driver, name="Test Adventure", status="draft")
+
+    assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
 @pytest.mark.unit
 def test_MP_03_create_adventure_missing_name_returns_error():
     """
-    create_adventure called without name must return a structured error or raise TypeError.
+    create_adventure called without name must return a structured error.
+    Per MP-02, functions must validate inputs and return structured errors,
+    not raise TypeError.
     """
     driver = _mock_driver()
-    try:
-        result = create_adventure(driver, uid="test-adventure", status="draft")
-        assert_that(result).contains_key("error")
-    except TypeError:
-        pass
+    result = create_adventure(driver, uid="test-adventure", status="draft")
+
+    assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
 @pytest.mark.unit
 def test_MP_03_create_adventure_missing_status_returns_error():
     """
-    create_adventure called without status must return a structured error or raise TypeError.
+    create_adventure called without status must return a structured error.
+    Per MP-02, functions must validate inputs and return structured errors,
+    not raise TypeError.
     """
     driver = _mock_driver()
-    try:
-        result = create_adventure(driver, uid="test-adventure", name="Test Adventure")
-        assert_that(result).contains_key("error")
-    except TypeError:
-        pass
+    result = create_adventure(driver, uid="test-adventure", name="Test Adventure")
+
+    assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
     driver.session.assert_not_called()
 
 
@@ -295,9 +312,9 @@ def test_MP_03_create_adventure_missing_status_returns_error():
 @pytest.mark.unit
 def test_MP_03_create_adventure_extra_args_does_not_raise():
     """
-    create_adventure called with extra unknown keyword arguments must not raise
-    an unhandled exception.  The function may ignore extras or return a structured
-    error, but must never propagate an unhandled exception.
+    create_adventure called with extra unknown keyword arguments must not raise.
+    Per MP-02, the function must use **kwargs (or equivalent) to absorb unknown
+    keys and return a success or structured error dict — never a bare TypeError.
     """
     driver = _mock_driver()
     try:
@@ -311,9 +328,8 @@ def test_MP_03_create_adventure_extra_args_does_not_raise():
         )
         # If a value is returned it must be a dict (success or error shape).
         assert_that(result).is_instance_of(dict)
-    except TypeError:
-        # Acceptable if the function uses explicit keyword params.
-        pass
+    except TypeError as exc:
+        pytest.fail(f"Function must use **kwargs; TypeError raised for extra args: {exc}")
     except Exception as exc:
         pytest.fail(f"Unexpected exception type raised for extra args: {type(exc).__name__}: {exc}")
 
@@ -355,3 +371,4 @@ def test_MP_02_get_adventure_not_found_returns_structured_error():
     result = get_adventure(driver, uid="nonexistent-adventure-uid-xyzzy")
 
     assert_that(result).contains_key("error")
+    assert_that(result["error"]).is_instance_of(str).is_not_empty()
