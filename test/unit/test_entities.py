@@ -1416,3 +1416,251 @@ def test_MP_02_get_entity_not_found_faction_returns_structured_error():
 
     assert_that(result).contains_key("error")
     assert_that(result["error"]).is_instance_of(str).is_not_empty()
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# NPC & Relationships (NR category)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+import dnd_mcp.tools.knowledge as knowledge
+import dnd_mcp.tools.boxed_text as boxed_text
+
+from test.fixtures.shadowdale import make_elminster, make_elminster_context
+
+
+# ── NR-01: Opinion sentiment range ───────────────────────────────────────────
+
+@pytest.mark.unit
+def test_NR_01_opinion_sentiment_range():
+    """
+    NPC Opinion sentiment must be an integer from -5 to +5 (inclusive).
+    """
+    assert hasattr(knowledge, "set_npc_opinion"), (
+        "knowledge.set_npc_opinion must be implemented (NR-01: opinion sentiment range -5 to +5)"
+    )
+    driver = MagicMock()
+
+    result_over = knowledge.set_npc_opinion(
+        driver,
+        source_uid="global-npc-elminster",
+        target_uid="global-npc-jhaele",
+        sentiment=6,
+    )
+    assert isinstance(result_over, dict), "set_npc_opinion() with sentiment=6 must return a dict"
+    assert "error" in result_over, (
+        "set_npc_opinion() with sentiment=6 (out of range) must return {'error': ...}"
+    )
+
+    result_under = knowledge.set_npc_opinion(
+        driver,
+        source_uid="global-npc-elminster",
+        target_uid="global-npc-jhaele",
+        sentiment=-6,
+    )
+    assert isinstance(result_under, dict), "set_npc_opinion() with sentiment=-6 must return a dict"
+    assert "error" in result_under, (
+        "set_npc_opinion() with sentiment=-6 (out of range) must return {'error': ...}"
+    )
+
+    result_valid = knowledge.set_npc_opinion(
+        driver,
+        source_uid="global-npc-elminster",
+        target_uid="global-npc-jhaele",
+        sentiment=5,
+    )
+    assert isinstance(result_valid, dict), "set_npc_opinion() with sentiment=5 must return a dict"
+    assert "error" not in result_valid, (
+        "set_npc_opinion() with sentiment=5 must succeed (no 'error' key)"
+    )
+    assert "uid" in result_valid, (
+        "set_npc_opinion() with valid sentiment=5 must return result with 'uid'"
+    )
+
+
+# ── NR-02: Opinion references source and target ───────────────────────────────
+
+@pytest.mark.unit
+def test_NR_02_opinion_references_source_and_target():
+    """
+    An Opinion must reference both a source entity and a target entity.
+    """
+    assert hasattr(knowledge, "set_npc_opinion"), (
+        "knowledge.set_npc_opinion must be implemented (NR-02: opinion requires source and target)"
+    )
+    driver = MagicMock()
+
+    result_no_source = knowledge.set_npc_opinion(
+        driver,
+        target_uid="global-npc-jhaele",
+        sentiment=3,
+    )
+    assert isinstance(result_no_source, dict), "set_npc_opinion() without source_uid must return a dict"
+    assert "error" in result_no_source, (
+        "set_npc_opinion() without source_uid must return {'error': ...}"
+    )
+
+    result_no_target = knowledge.set_npc_opinion(
+        driver,
+        source_uid="global-npc-elminster",
+        sentiment=3,
+    )
+    assert isinstance(result_no_target, dict), "set_npc_opinion() without target_uid must return a dict"
+    assert "error" in result_no_target, (
+        "set_npc_opinion() without target_uid must return {'error': ...}"
+    )
+
+
+# ── NR-03: Opinion target types ──────────────────────────────────────────────
+
+@pytest.mark.unit
+def test_NR_03_opinion_target_valid_types():
+    """
+    Opinion targets may be: NPC, NPCContext, Faction, Item, Location, or Event.
+    No other node type is a valid opinion target.
+    """
+    assert hasattr(knowledge, "set_npc_opinion"), (
+        "knowledge.set_npc_opinion must be implemented (NR-03: opinion target valid types)"
+    )
+    driver = MagicMock()
+    valid_targets = [
+        ("global-npc-jhaele", "NPC"),
+        ("ctx-elminster-troubles", "NPCContext"),
+        ("global-faction-zhentarim", "Faction"),
+        ("global-item-pipe-of-elminster", "Item"),
+        ("global-loc-shadowdale", "Location"),
+        ("evt-01-arrival", "Event"),
+    ]
+    for target_uid, label in valid_targets:
+        result = knowledge.set_npc_opinion(
+            driver,
+            source_uid="global-npc-elminster",
+            target_uid=target_uid,
+            sentiment=2,
+        )
+        assert isinstance(result, dict), (
+            f"set_npc_opinion() targeting {label} must return a dict"
+        )
+        assert "error" not in result, (
+            f"set_npc_opinion() targeting {label} ({target_uid}) must succeed (no 'error' key)"
+        )
+
+    result_invalid = knowledge.set_npc_opinion(
+        driver,
+        source_uid="global-npc-elminster",
+        target_uid="timeline-main",
+        sentiment=2,
+    )
+    assert isinstance(result_invalid, dict), "set_npc_opinion() targeting Timeline must return a dict"
+    assert "error" in result_invalid, (
+        "set_npc_opinion() targeting a Timeline node (invalid type) must return {'error': ...}"
+    )
+
+
+# ── NR-04: KNOWS relationship requires relationship_type ─────────────────────
+
+@pytest.mark.unit
+def test_NR_04_knows_relationship_type_required():
+    """
+    A KNOWS relationship must specify relationship_type.
+    trust_level is optional.
+    """
+    assert hasattr(knowledge, "set_npc_relationship"), (
+        "knowledge.set_npc_relationship must be implemented (NR-04: KNOWS requires relationship_type)"
+    )
+    driver = MagicMock()
+
+    result_no_type = knowledge.set_npc_relationship(
+        driver,
+        source_uid="global-npc-elminster",
+        target_uid="global-npc-jhaele",
+    )
+    assert isinstance(result_no_type, dict), "set_npc_relationship() without relationship_type must return a dict"
+    assert "error" in result_no_type, (
+        "set_npc_relationship() without relationship_type must return {'error': ...}"
+    )
+
+    result_with_type = knowledge.set_npc_relationship(
+        driver,
+        source_uid="global-npc-elminster",
+        target_uid="global-npc-jhaele",
+        relationship_type="old friends",
+    )
+    assert isinstance(result_with_type, dict), "set_npc_relationship() with relationship_type must return a dict"
+    assert "error" not in result_with_type, (
+        "set_npc_relationship() with relationship_type='old friends' must succeed (no 'error' key)"
+    )
+
+
+# ── NR-05: NPC dialogue requires trigger condition ───────────────────────────
+
+@pytest.mark.unit
+def test_NR_05_npc_dialogue_trigger_condition_required():
+    """
+    NPC dialogue (BoxedText) must be associated with a trigger condition.
+    """
+    assert hasattr(boxed_text, "add_boxed_text"), (
+        "boxed_text.add_boxed_text must be implemented (NR-05: NPC dialogue requires trigger_condition)"
+    )
+    driver = MagicMock()
+    result = boxed_text.add_boxed_text(
+        driver,
+        attached_to_uid="global-npc-elminster",
+        content_summary="Elminster greets the party",
+        tone="warm",
+        sequence_position=1,
+    )
+    assert isinstance(result, dict), "add_boxed_text() attached to NPC without trigger_condition must return a dict"
+    assert "error" in result, (
+        "add_boxed_text() attached to NPC without trigger_condition must return {'error': ...}"
+    )
+
+
+# ── NR-06: NPCContext may override Global summary ────────────────────────────
+
+@pytest.mark.unit
+def test_NR_06_npc_context_overrides_summary_without_modifying_global():
+    """
+    An NPCContext may override the Global NPC summary without modifying
+    the Global node itself.
+    """
+    assert hasattr(entities, "update_entity_context"), (
+        "entities.update_entity_context must be implemented (NR-06: context overrides summary without modifying global)"
+    )
+    driver = MagicMock()
+    result = entities.update_entity_context(
+        driver,
+        uid="ctx-elminster-troubles",
+        summary="New context summary",
+    )
+    assert isinstance(result, dict), "update_entity_context() must return a dict"
+    assert "uid" in result, "update_entity_context() must return result with 'uid'"
+    assert result["uid"] == "ctx-elminster-troubles", (
+        "update_entity_context() must return the context node uid"
+    )
+
+    elminster = make_elminster()
+    assert elminster["summary"] != "New context summary", (
+        "The global node summary must remain unchanged after update_entity_context()"
+    )
+
+
+# ── NR-07: get_npc_profile returns complete profile ──────────────────────────
+
+@pytest.mark.unit
+def test_NR_07_get_npc_profile_complete():
+    """
+    get_npc_profile must return: global identity, context, opinions, rumors,
+    facts, NPC relationships, and BoxedText.
+    """
+    assert hasattr(knowledge, "get_npc_profile"), (
+        "knowledge.get_npc_profile must be implemented (NR-07: complete NPC profile)"
+    )
+    driver = MagicMock()
+    result = knowledge.get_npc_profile(driver, npc_uid="global-npc-elminster")
+    assert isinstance(result, dict), "get_npc_profile() must return a dict"
+    required_keys = {"global_identity", "context", "opinions", "rumors", "facts", "relationships", "boxed_text"}
+    missing = required_keys - set(result.keys())
+    assert not missing, (
+        f"get_npc_profile() must return dict with keys: {required_keys}. "
+        f"Missing: {missing}"
+    )
